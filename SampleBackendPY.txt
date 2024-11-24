@@ -1,85 +1,0 @@
-import pandas as pd
-
-# Mock health data
-data = {
-    "user_id": [1, 2, 3, 4, 5],
-    "age": [25, 34, 45, 52, 60],
-    "bmi": [22.5, 27.8, 31.0, 29.5, 33.2],  # Body Mass Index
-    "steps_per_day": [12000, 8000, 4000, 3000, 2000],
-    "sleep_hours": [7, 6, 5, 4.5, 6],
-    "heart_rate": [65, 78, 85, 90, 95],  # Resting heart rate
-}
-
-# Create a DataFrame
-df = pd.DataFrame(data)
-
-# Analysis Criteria
-def analyze_user(row):
-    risk_factors = []
-
-    # Age risk
-    if row["age"] > 50:
-        risk_factors.append("Age > 50")
-    
-    # BMI risk
-    if row["bmi"] >= 30:
-        risk_factors.append("BMI >= 30")
-    
-    # Low activity level
-    if row["steps_per_day"] < 5000:
-        risk_factors.append("Low activity (<5000 steps/day)")
-    
-    # Low sleep
-    if row["sleep_hours"] < 6:
-        risk_factors.append("Sleep < 6 hours")
-    
-    # High resting heart rate
-    if row["heart_rate"] > 85:
-        risk_factors.append("High resting heart rate (>85 bpm)")
-    
-    # Flagging users for health insurance review
-    flagged = len(risk_factors) >= 3  # Flag if 3 or more risk factors
-    
-    return {
-        "risk_factors": ", ".join(risk_factors),
-        "flagged": flagged
-    }
-
-# Apply analysis to each user
-df_analysis = df.apply(analyze_user, axis=1, result_type="expand")
-df = pd.concat([df, df_analysis], axis=1)
-
-# Display flagged users
-flagged_users = df[df["flagged"]]
-
-# Output Results
-print("User Profiles and Risk Analysis:")
-print(df)
-
-print("\nFlagged Users for Health Insurance Review:")
-print(flagged_users)
-
-# Save results to an Excel file
-df.to_excel("health_insurance_analysis.xlsx", index=False)
-
-How it Works
-1. Mock Data: The script uses mock health data for simplicity. Replace this with real data from your application or database.
-2. Risk Analysis:
-o Age > 50 is flagged as a risk factor.
-o BMI ? 30 is considered a risk for obesity.
-o Less than 5000 steps/day indicates low activity levels.
-o Sleep < 6 hours is flagged as insufficient sleep.
-o Resting heart rate > 85 bpm is flagged as high.
-3. Flagging Users: Users with three or more risk factors are flagged for health insurance review.
-4. Output: The script prints detailed user profiles and a list of flagged users. It also saves the results to an Excel file.
-Output Example
-User Profiles and Risk Analysis:
-user_idagebmisteps_per_daysleep_hoursheart_raterisk_factorsflagged12522.512000765False23427.88000678False34531.04000585BMI >= 30, Low activity, Sleep < 6True45229.530004.590Age > 50, Low activity, High HRTrue56033.22000695Age > 50, BMI >= 30, Low activityTrueFlagged Users for Health Insurance Review:
-user_idagebmisteps_per_daysleep_hoursheart_raterisk_factorsflagged34531.04000585BMI >= 30, Low activity, Sleep < 6True45229.530004.590Age > 50, Low activity, High HRTrue56033.22000695Age > 50, BMI >= 30, Low activityTrueUse Cases
-* Generate risk profiles for users based on their health data.
-* Identify users who may require special health insurance considerations.
-* Provide actionable insights for improving health behaviors.
-Let me know if you need help customizing this script for your specific needs!
-
-
-
